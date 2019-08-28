@@ -38,12 +38,12 @@ public class ImageController {
     @GetMapping("database/{id}")
     public ResponseEntity<byte[]> fromDatabaseAsResEntity(@PathVariable("id") Integer id) throws SQLException {
 
-        Optional<User> primeMinisterOfIndia = imageRepository.findById(id);
+        Optional<User> userImage = imageRepository.findById(id);
         byte[] imageBytes = null;
-        if (primeMinisterOfIndia.isPresent()) {
+        if (userImage.isPresent()) {
 
-            imageBytes = primeMinisterOfIndia.get().getPhoto().getBytes(1,
-                    (int) primeMinisterOfIndia.get().getPhoto().length());
+            imageBytes = userImage.get().getPhoto().getBytes(1,
+                    (int) userImage.get().getPhoto().length());
         }
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
@@ -54,11 +54,11 @@ public class ImageController {
     public void fromDatabaseAsHttpServResp(@PathVariable("id") Integer id, HttpServletResponse response)
             throws SQLException, IOException {
 
-        Optional<User> primeMinisterOfIndia = imageRepository.findById(id);
+        Optional<User> userImage = imageRepository.findById(id);
 
-        if (primeMinisterOfIndia.isPresent()) {
+        if (userImage.isPresent()) {
 
-            Blob image = primeMinisterOfIndia.get().getPhoto();
+            Blob image = userImage.get().getPhoto();
 
             StreamUtils.copy(image.getBinaryStream(), response.getOutputStream());
         }
