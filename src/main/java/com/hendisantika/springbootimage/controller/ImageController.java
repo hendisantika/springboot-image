@@ -75,5 +75,12 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
     }
 
+    // Return the image from the classpath location using HttpServletResponse
+    @GetMapping(value = "classpath1", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void fromClasspathAsHttpServResp(HttpServletResponse response) throws IOException {
 
+        ClassPathResource imageFile = new ClassPathResource("pm-india/vajpayee.jpg");
+
+        StreamUtils.copy(imageFile.getInputStream(), response.getOutputStream());
+    }
 }
