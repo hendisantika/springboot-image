@@ -68,7 +68,7 @@ public class ImageController {
     @GetMapping(value = "classpath")
     public ResponseEntity<byte[]> fromClasspathAsResEntity() throws IOException {
 
-        ClassPathResource imageFile = new ClassPathResource("pm-india/modi.jpg");
+        ClassPathResource imageFile = new ClassPathResource("images/naruto.jpg");
 
         byte[] imageBytes = StreamUtils.copyToByteArray(imageFile.getInputStream());
 
@@ -79,7 +79,7 @@ public class ImageController {
     @GetMapping(value = "classpath1", produces = MediaType.IMAGE_JPEG_VALUE)
     public void fromClasspathAsHttpServResp(HttpServletResponse response) throws IOException {
 
-        ClassPathResource imageFile = new ClassPathResource("pm-india/vajpayee.jpg");
+        ClassPathResource imageFile = new ClassPathResource("images/sasuke.png");
 
         StreamUtils.copy(imageFile.getInputStream(), response.getOutputStream());
     }
