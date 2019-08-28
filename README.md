@@ -31,6 +31,53 @@ public ResponseEntity<byte[]> fromDatabaseAsResEntity(@PathVariable("id") Intege
 	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
 }
 ```
+## From Classpath
+Pass the image classpath location to `ClassPathResource` constructor, 
+get the image bytes by calling `StreamUtils.copyToByteArray(imageFile.getInputStream())` method 
+and pass the image byte array to the `ResponseEntity` body.
+```
+@GetMapping(value = "classpath")
+public ResponseEntity<byte[]> fromClasspathAsResEntity() throws IOException {
+
+	ClassPathResource imageFile = new ClassPathResource("images/sasuke.jpg");
+
+	byte[] imageBytes = StreamUtils.copyToByteArray(imageFile.getInputStream());
+
+	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+}
+```
+
+## Using the HttpServletResponse
+Serving images/media using `HttpServletResponse` is the most basic approach.  
+It is the pure Servlet implementation and used from a decade.
+
+## From Database
+```
+@GetMapping(value = "database1/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+public void fromDatabaseAsHttpServResp(@PathVariable("id") Integer id, HttpServletResponse response)
+		throws SQLException, IOException {
+
+	Optional<User> userImage = imageRepository.findById(id);
+
+	if (userImage.isPresent()) {
+
+		Blob image = userImage.get().getPhoto();
+
+		StreamUtils.copy(image.getBinaryStream(), response.getOutputStream());
+	}
+}
+```
+## From Classpath
+```
+@GetMapping(value = "classpath1", produces = MediaType.IMAGE_JPEG_VALUE)
+public void fromClasspathAsHttpServResp(HttpServletResponse response) throws IOException {
+
+	ClassPathResource imageFile = new ClassPathResource("images/naruto.jpg");
+
+	StreamUtils.copy(imageFile.getInputStream(), response.getOutputStream());
+}
+```
+Now let’s jump to the actual implementation of Spring Boot- Display image from database and classpath.
 
 
 ## Things to do:
