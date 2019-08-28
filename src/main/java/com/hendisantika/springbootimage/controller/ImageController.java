@@ -3,6 +3,7 @@ package com.hendisantika.springbootimage.controller;
 import com.hendisantika.springbootimage.entity.User;
 import com.hendisantika.springbootimage.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
@@ -62,5 +63,17 @@ public class ImageController {
             StreamUtils.copy(image.getBinaryStream(), response.getOutputStream());
         }
     }
+
+    // Return the image from the classpath location using ResponseEntity
+    @GetMapping(value = "classpath")
+    public ResponseEntity<byte[]> fromClasspathAsResEntity() throws IOException {
+
+        ClassPathResource imageFile = new ClassPathResource("pm-india/modi.jpg");
+
+        byte[] imageBytes = StreamUtils.copyToByteArray(imageFile.getInputStream());
+
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+    }
+
 
 }
