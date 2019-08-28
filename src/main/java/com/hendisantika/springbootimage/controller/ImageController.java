@@ -5,11 +5,15 @@ import com.hendisantika.springbootimage.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -42,6 +46,21 @@ public class ImageController {
         }
 
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+    }
+
+    // Return the image from the database using HttpServletResponse
+    @GetMapping(value = "database1/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void fromDatabaseAsHttpServResp(@PathVariable("id") Integer id, HttpServletResponse response)
+            throws SQLException, IOException {
+
+        Optional<User> primeMinisterOfIndia = imageRepository.findById(id);
+
+        if (primeMinisterOfIndia.isPresent()) {
+
+            Blob image = primeMinisterOfIndia.get().getPhoto();
+
+            StreamUtils.copy(image.getBinaryStream(), response.getOutputStream());
+        }
     }
 
 }
