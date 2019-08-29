@@ -79,8 +79,32 @@ public void fromClasspathAsHttpServResp(HttpServletResponse response) throws IOE
 ```
 Now let’s jump to the actual implementation of Spring Boot- Display image from database and classpath.
 
-
 ## Things to do:
 1. Clone repository: `git clone https://github.com/hendisantika/springboot-image.git`. 
 2. Go to the folder: `cd springboot-image`
 3. Run the app: `mvn clean spring-boot:run` 
+
+## Test it
+When the application successfully started, open your favorite web browser and hit the below URL’s:
+
+1. From database as ResponseEntity → http://localhost:8080/image/database/{id}
+
+2. From database as  HttpServletResponse → http://localhost:8080/image/database1/{id}
+
+3. From classpath as ResponseEntity → http://localhost:8080/image/classpath
+
+4. From classpath as  HttpServletResponse → http://localhost:8080/image/classpath1
+
+
+> Attention: In this example, we have not written any logic to insert images into the database. Inserting an image into the database is done manually for the below table structure:
+```
+CREATE TABLE `tbl_user` (
+  `id` int(11) NOT NULL,
+  `photo` longblob,
+  PRIMARY KEY (`id`)
+);
+```
+The SQL query to insert the images:
+```
+INSERT INTO tbl_user(id,photo) VALUES(101,LOAD_FILE('/tmp/images/sasuke.jpg'));
+```
